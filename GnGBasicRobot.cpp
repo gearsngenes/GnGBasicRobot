@@ -107,26 +107,26 @@ void GnGBasicRobot::moveRobotBackward(int delTime)
 
 void GnGBasicRobot::turnRobotRight(int delTime)
 {
-  moveM1Forward();
-  moveM2Backward();
+  moveM2Forward();
+  moveM1Backward();
   delay(delTime);
 }
 void GnGBasicRobot::turnRobotLeft(int delTime)
 {
-  moveM1Backward();
-  moveM2Forward();
+  moveM2Backward();
+  moveM1Forward();
   delay(delTime);
 }
 void GnGBasicRobot::pivotTurnRobotRight(int delTime)
 {
-  moveM1Forward();
-  stopM2();
+  moveM2Forward();
+  stopM1();
   delay(delTime);
 }
 void GnGBasicRobot::pivotTurnRobotLeft(int delTime)
 {
-  stopM1();
-  moveM2Forward();
+  stopM2();
+  moveM1Forward();
   delay(delTime);
 }
 void GnGBasicRobot::stopRobot(int delTime )
