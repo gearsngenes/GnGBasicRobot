@@ -1,3 +1,16 @@
+/*
+ * GearsNGEnes released this library
+ * GnGBasicRobot is a basic Robot class that works with Adafruit's Feather Format (pin configurations work for 32u4, 32u4 ble, Huzzah ESP8266 and M0)
+ * It can be hooked up with most H-Bridges.
+ * It comes with a corresponding PCB open-source hardware (OSHpark will sell)
+ * It provides various basic robot movements with a couple of advanced ones ("process" turns) for bluetooth libraries.
+ * This is released under Creative Commons and you should include this comment when you are using.
+ * See GearsNGenes at: 
+ * Code: https://github.com/gearsngenes
+ * Website: https://gearsngenes.com/
+ * Blogs:https://gearsngenes.com/blog/
+ */
+ 
 #include "GnGBasicRobot.h"
 #include "Arduino.h"
 
@@ -10,12 +23,8 @@ GnGBasicRobot::GnGBasicRobot()
   Motor2In2 = 6;
   speedval = 150;
   state = 0;
+  this->setUp();
 }
-void GnGBasicRobot::printVals()
-{
-  Serial.println("in printvals");
-}
-
 GnGBasicRobot::GnGBasicRobot(int m1I1, int m1I2, int pwmpin, int m2I1, int m2I2, int spval)
 {
   Motor1In1 = m1I1;
@@ -24,10 +33,23 @@ GnGBasicRobot::GnGBasicRobot(int m1I1, int m1I2, int pwmpin, int m2I1, int m2I2,
   Motor2In1 = m2I1;
   Motor2In2 = m2I2;
   speedval = spval;
-  //BoardAlive = balive;
   state = 0;
+  this->setUp();
+}
+void GnGBasicRobot::setUp() {
+  pinMode(Motor1In1, OUTPUT);
+  pinMode(Motor1In2, OUTPUT);
+  pinMode(Motor2In1, OUTPUT);
+  pinMode(Motor2In2, OUTPUT);
+  pinMode(PWMIn, OUTPUT);
 }
 
+
+
+void GnGBasicRobot::printVals()
+{
+  Serial.println("in printvals");
+}
 void GnGBasicRobot::moveM1Forward()
 {
   analogWrite(PWMIn, speedval);
@@ -83,31 +105,46 @@ void GnGBasicRobot::moveRobotBackward(int delTime)
 }
 
 
-void GnGBasicRobot::moveRobotRight(int delTime)
+void GnGBasicRobot::turnRobotRight(int delTime)
 {
   moveM1Forward();
   moveM2Backward();
   delay(delTime);
 }
-void GnGBasicRobot::moveRobotLeft(int delTime)
+void GnGBasicRobot::turnRobotLeft(int delTime)
 {
   moveM1Backward();
   moveM2Forward();
   delay(delTime);
 }
-
-void GnGBasicRobot::stopRobot()
+void GnGBasicRobot::pivotTurnRobotRight(int delTime)
+{
+  moveM1Forward();
+  stopM2();
+  delay(delTime);
+}
+void GnGBasicRobot::pivotTurnRobotLeft(int delTime)
+{
+  stopM1();
+  moveM2Forward();
+  delay(delTime);
+}
+void GnGBasicRobot::stopRobot(int delTime )
 {
   state = -1;
   stopM1();
   stopM2();
+  delay(delTime);
 }
 
 void GnGBasicRobot::processRightTurn(boolean start)
+/* start turning if "start = true"; otherwise, stop turning,
+   go back to whatever state it was (forard or backward)
+*/
 {
   if (start)
   {
-    moveRobotRight();
+    turnRobotRight();
   }
   else {
     if (state == 1) {
@@ -121,10 +158,13 @@ void GnGBasicRobot::processRightTurn(boolean start)
 
 }
 void GnGBasicRobot::processLeftTurn(boolean start)
+/* start turning if "start = true"; otherwise, stop turning,
+   go back to whatever state it was (forard or backward)
+*/
 {
   if (start)
   {
-    moveRobotLeft();
+    turnRobotLeft();
   }
   else {
     if (state == 1) {
@@ -137,27 +177,23 @@ void GnGBasicRobot::processLeftTurn(boolean start)
   };
 
 }
-void GnGBasicRobot::increaseSpeed()
+void GnGBasicRobot::setRobotSpeed(int speedval1)
 {
-  speedval = (speedval + 10);
+  speedval = speedval1;
+}
+void GnGBasicRobot::increaseSpeed(int detlaSp)
+{
+  speedval = (speedval + detlaSp);
   if (speedval >= 255) {
     speedval = 255;
   }
   Serial.print("Speed: "); Serial.println(speedval);
 }
-void GnGBasicRobot::decreaseSpeed()
+void GnGBasicRobot::decreaseSpeed(int detlaSp)
 {
-  speedval = (speedval - 10);
+  speedval = (speedval - detlaSp);
   if (speedval <= 10) {
     speedval = 0;
   }
   Serial.print("Speed: "); Serial.println(speedval);
-}
-
-void GnGBasicRobot::setUp() {
-  pinMode(Motor1In1, OUTPUT);
-  pinMode(Motor1In2, OUTPUT);
-  pinMode(Motor2In1, OUTPUT);
-  pinMode(Motor2In2, OUTPUT);
-  pinMode(PWMIn, OUTPUT);
 }
