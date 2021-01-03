@@ -11,7 +11,7 @@
  * Blogs:https://gearsngenes.com/blog/
  */
  
-#include "GnGBasicRobot.h"
+#include <GnGBasicRobot.h>
 #include "Arduino.h"
 
 GnGBasicRobot::GnGBasicRobot()
@@ -42,6 +42,8 @@ void GnGBasicRobot::setUp() {
   pinMode(Motor2In1, OUTPUT);
   pinMode(Motor2In2, OUTPUT);
   pinMode(PWMIn, OUTPUT);
+//  stopRobot(); // default at the beginning is to stop the robot
+  
 }
 
 
@@ -180,6 +182,7 @@ void GnGBasicRobot::processLeftTurn(boolean start)
 void GnGBasicRobot::setRobotSpeed(int speedval1)
 {
   speedval = speedval1;
+  analogWrite(PWMIn, speedval);
 }
 void GnGBasicRobot::increaseSpeed(int detlaSp)
 {
@@ -187,6 +190,7 @@ void GnGBasicRobot::increaseSpeed(int detlaSp)
   if (speedval >= 255) {
     speedval = 255;
   }
+  analogWrite(PWMIn, speedval);
   Serial.print("Speed: "); Serial.println(speedval);
 }
 void GnGBasicRobot::decreaseSpeed(int detlaSp)
@@ -195,5 +199,6 @@ void GnGBasicRobot::decreaseSpeed(int detlaSp)
   if (speedval <= 10) {
     speedval = 0;
   }
+  analogWrite(PWMIn, speedval);
   Serial.print("Speed: "); Serial.println(speedval);
 }

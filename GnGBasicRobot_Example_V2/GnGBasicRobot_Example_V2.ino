@@ -1,10 +1,10 @@
 #include <GnGBasicRobot.h>
+#include <GnGBasicRobot.CPP>
 
 GnGBasicRobot robot1;
 
 void setup() {
   // put your setup code here, to run once:
-  robot1.setUp();
   robot1.setRobotSpeed(50);
   Serial.begin(9600);
 }
